@@ -16,6 +16,7 @@
 import {defineComponent, ref, onMounted} from 'vue';
 import * as d3 from 'd3';
 import axios from 'axios';
+import type {HierarchyPointNode} from "d3";
 
 interface Node {
   name: string;
@@ -26,11 +27,7 @@ interface Node {
 interface Node {
   x: number;
   y: number;
-}
-
-interface Link {
-  source: Node;
-  target: Node;
+  data: unknown;
 }
 
 export default defineComponent({
@@ -79,7 +76,7 @@ export default defineComponent({
         .data(treeData.links())
         .enter().append('path')
         .attr('class', 'link')
-        .attr('d', d3.linkHorizontal<Link, Node>()
+        .attr('d', d3.linkHorizontal<d3.HierarchyPointLink<Node>, HierarchyPointNode<Node>>()
           .x(d => d.y)
           .y(d => d.x));
 

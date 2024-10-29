@@ -1,4 +1,4 @@
-import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest';
+import {afterEach, beforeEach, describe, expect, it, type Mock, vi} from 'vitest';
 import App from '@/App.vue';
 import * as d3 from 'd3';
 import {mount} from "@vue/test-utils";
@@ -19,7 +19,7 @@ describe('App', () => {
     vi.clearAllMocks();
 
     // Mock the API response
-    (axios.get as jest.Mock).mockResolvedValue({data: mockData});
+    (axios.get as Mock).mockResolvedValue({data: mockData});
   });
 
   afterEach(() => {
@@ -78,7 +78,7 @@ describe('App', () => {
 
   it('handles API error gracefully', async () => {
     console.error = vi.fn(); // Mock console.error
-    (axios.get as jest.Mock).mockRejectedValue(new Error('API Error'));
+    (axios.get as Mock).mockRejectedValue(new Error('API Error'));
 
     const wrapper = mount(App);
     await wrapper.vm.$nextTick();
