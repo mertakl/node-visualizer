@@ -30,7 +30,7 @@ export default defineComponent({
 
     const fetchData = async () => {
       try {
-        const response = await axios.get<Node[]>('http://localhost:3000/api/graph');
+        const response = await axios.get<Node[]>(import.meta.env.VITE_API_URL);
         return response.data;
       } catch (error) {
         console.error('Error fetching data:', error);
