@@ -38,7 +38,7 @@ cd node-visualizer
 
 3. Run Backend Server:
    ```bash
-   npm run start
+   npm run dev
    ```
 4. API Endpoint: The backend server serves data at GET /api/graph.
 
