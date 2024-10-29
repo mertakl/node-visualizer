@@ -77,7 +77,7 @@ graph visualization library.
 2. Open the application in your web browser
 3. The graph will be displayed
 4. Click on a node to view its details in the sidebar
-5. Use the 'Close' button to deselect a node
+5. Use the 'Deselect Node' button to deselect a node
 
 ## Testing
 
