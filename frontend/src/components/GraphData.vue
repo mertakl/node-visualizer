@@ -3,18 +3,19 @@
     <div class="graph-container">
       <svg ref="svg"></svg>
     </div>
+    <div v-if="loading">Loading data. This might take up to a minute; please wait...</div>
     <div v-if="selectedNode" class="sidebar">
       <h2>{{ selectedNode.name }}</h2>
       <p>{{ selectedNode.description }}</p>
-      <button @click="deselectNode">Close</button>
+      <button v-if="!loading && selectedNode" @click="deselectNode">Deselect Node</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref} from 'vue';
-import axios from 'axios';
+import {defineComponent, ref, onMounted} from 'vue';
 import * as d3 from 'd3';
+import axios from 'axios';
 
 interface Node {
   name: string;
@@ -27,19 +28,25 @@ export default defineComponent({
   setup() {
     const svg = ref<SVGElement | null>(null);
     const selectedNode = ref<Node | null>(null);
+    const loading = ref<boolean>(false);
 
     const fetchData = async () => {
+      loading.value = true;
       try {
         const response = await axios.get<Node[]>(`${import.meta.env.VITE_API_URL}/api/graph`);
         return response.data;
       } catch (error) {
         console.error('Error fetching data:', error);
         return [];
+      } finally {
+        loading.value = false;
       }
     };
 
     const renderGraph = (data: Node[]) => {
-      if (!svg.value) return;
+      if (!svg.value || data.length === 0) {
+        return;
+      }
 
       const width = 800;
       const height = 600;
@@ -62,7 +69,7 @@ export default defineComponent({
         .data(treeData.links())
         .enter().append('path')
         .attr('class', 'link')
-        .attr('d', d3.linkHorizontal<any, any>()
+        .attr('d', d3.linkHorizontal<never, never>()
           .x(d => d.y)
           .y(d => d.x));
 
@@ -86,10 +93,12 @@ export default defineComponent({
     };
 
     const deselectNode = () => {
+      // Deselect node
       selectedNode.value = null;
     };
 
     onMounted(async () => {
+      // Fetch data
       const data = await fetchData();
       renderGraph(data);
     });
@@ -98,6 +107,7 @@ export default defineComponent({
       svg,
       selectedNode,
       deselectNode,
+      loading,
     };
   },
 });
