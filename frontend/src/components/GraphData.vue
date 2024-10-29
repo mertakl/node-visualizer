@@ -23,6 +23,16 @@ interface Node {
   children: string[];
 }
 
+interface Node {
+  x: number;
+  y: number;
+}
+
+interface Link {
+  source: Node;
+  target: Node;
+}
+
 export default defineComponent({
   name: 'App',
   setup() {
@@ -69,7 +79,7 @@ export default defineComponent({
         .data(treeData.links())
         .enter().append('path')
         .attr('class', 'link')
-        .attr('d', d3.linkHorizontal<never, never>()
+        .attr('d', d3.linkHorizontal<Link, Node>()
           .x(d => d.y)
           .y(d => d.x));
 
